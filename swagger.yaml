@@ -1,0 +1,333 @@
+openapi: 3.0.0
+info:
+  title: Product REST API
+  description: CREATE, READ, DLETE, UPDATE, SEARCH, LIST Products.
+  version: 1.0.0
+
+servers:
+  - url: http://localhost:4000/api/
+    description: localhost version of our app
+
+paths:
+  /products:
+    post:
+      summary: create a product with provided fields.
+      description: this will create a product with name, type, category and price.
+      requestBody:
+        required: true
+        description: An object with userId, name, type, category and price
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  example: "Asus VivoBook 15 Core i7 10th Gen - ( 16Gb/ 2TB HDD/windows 11)"
+                userId:
+                  type: string
+                  example: "user1"
+                type:
+                  type: String
+                  example: "Laptop"
+                category:
+                  type: String
+                  example: "Electronics"
+                price:
+                  type: integer
+                  example: 85490
+
+
+      responses:
+        "201":
+          description: This will return an object which includes status of success and an product object
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  product: 
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                        example: "Asus VivoBook 15 Core i7 10th Gen - ( 16Gb/ 2TB HDD/windows 11)"
+                      userId:
+                        type: string
+                        example: "user1"
+                      type:
+                        type: String
+                        example: "Laptop"
+                      category:
+                        type: String
+                        example: "Electronics"
+                      price:
+                        type: integer
+                        example: 85490
+    get:
+      summary: Returns a list of products.
+      description: get all the products available.
+      parameters:
+        - in: query
+          name: type
+          schema:
+            type: string
+            description: Type of the product
+        - in: query
+          name: category
+          schema:
+            type: string
+            description: Category of the product
+        - in: query
+          name: name
+          schema:
+            type: string
+            description: Name of the product
+        - in: query
+          name: maxPrice
+          schema:
+            type: integer
+            description: Maximum price of the product
+        - in: query
+          name: minPrice
+          schema:
+            type: integer
+            description: Minimum price of the product
+
+      responses:
+        "200": # status code
+          description: A object with a JSON array of product
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: boolean
+                    example: true
+                  products:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                          example: "Asus VivoBook 15 Core i7 10th Gen - ( 16Gb/ 2TB HDD/windows 11)"
+                        userId:
+                          type: string
+                          example: "user1"
+                        type:
+                          type: String
+                          example: "Laptop"
+                        category:
+                          type: String
+                          example: "Electronics"
+                        price:
+                          type: integer
+                          example: 85490
+
+  /product/{productId}:
+    delete:
+      summary: Deletes a product that added by an user(seller) with productId.
+      # description: Optional extended description in CommonMark or HTML.
+      requestBody:
+        required: true
+        description: An object with userId.
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                userId:
+                  type: string
+                  example: "user1"
+      parameters:
+        - in: path
+          name: productId
+          required: true
+      responses:
+        "200":
+          description: This will return an object which includes status of success and the deleted product object
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  product: 
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                        example: "Asus VivoBook 15 Core i7 10th Gen - ( 16Gb/ 2TB HDD/windows 11)"
+                      userId:
+                        type: string
+                        example: "user1"
+                      type:
+                        type: String
+                        example: "Laptop"
+                      category:
+                        type: String
+                        example: "Electronics"
+                      price:
+                        type: integer
+                        example: 85490
+
+    patch:
+      summary: Updates an Product that added by an specific seller.
+      # description: Optional extended description in CommonMark or HTML.
+      parameters:
+        - in: path
+          name: productId
+          required: true
+      requestBody:
+        description: An object with userId, name, type, category and price
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  example: "Asus VivoBook 15 Core i7 10th Gen - ( 16Gb/ 2TB HDD/windows 11)"
+                userId:
+                  type: string
+                  example: "user1"
+                type:
+                  type: String
+                  example: "Laptop"
+                category:
+                  type: String
+                  example: "Electronics"
+                price:
+                  type: integer
+                  example: 85490
+      responses:
+        "200": # status code
+          description: This will return an object which includes status of success and an product object
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  product: 
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                        example: "Asus VivoBook 15 Core i7 10th Gen - ( 16Gb/ 2TB HDD/windows 11)"
+                      userId:
+                        type: string
+                        example: "user1"
+                      type:
+                        type: String
+                        example: "Laptop"
+                      category:
+                        type: String
+                        example: "Electronics"
+                      price:
+                        type: integer
+                        example: 85490
+        "404": # status code
+          description: This will return an object with error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: boolean
+                    example: false
+                  error:
+                    type: string
+                    example: error
+  
+  /products/search:
+    get:
+      summary: Returns a list of products for search query.
+      parameters:
+        - in: query
+          name: searchQuery
+          schema:
+            type: string
+            description: A query string to search product.
+
+      responses:
+        "200": # status code
+          description: A object with a JSON array of product
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: boolean
+                    example: true
+                  products:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                          example: "Asus VivoBook 15 Core i7 10th Gen - ( 16Gb/ 2TB HDD/windows 11)"
+                        userId:
+                          type: string
+                          example: "user1"
+                        type:
+                          type: String
+                          example: "Laptop"
+                        category:
+                          type: String
+                          example: "Electronics"
+                        price:
+                          type: integer
+                          example: 85490
+  
+  /products/seller/{userId}:
+    get:
+      summary: Get all the products added by a specific user.
+      # description: Optional extended description in CommonMark or HTML.
+      parameters:
+        - in: path
+          name: userId
+          required: true
+      responses:
+        "200": # status code
+          description: A object with a JSON array of product
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: boolean
+                    example: true
+                  products:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                          example: "Asus VivoBook 15 Core i7 10th Gen - ( 16Gb/ 2TB HDD/windows 11)"
+                        userId:
+                          type: string
+                          example: "user1"
+                        type:
+                          type: String
+                          example: "Laptop"
+                        category:
+                          type: String
+                          example: "Electronics"
+                        price:
+                          type: integer
+                          example: 85490
